@@ -34,3 +34,6 @@ No Fraud / Node Forward Bot
 - 文件[fraud.db](./fraud.db)为欺诈数据，格式为每行一个uid
 - 可以通过pr扩展本数据，也可以通过提issue方式补充
 - 提供额外欺诈信息时，需要提供一定的消息出处
+
+## Thanks
+- [telegram-bot-cloudflare](https://github.com/cvzi/telegram-bot-cloudflare)
