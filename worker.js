@@ -8,6 +8,7 @@ const fraudDb = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/fraud.
 const notificationUrl = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/notification.txt'
 const startMsgUrl = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/startMessage.md';
 
+const enable_notification = true
 /**
  * Return url to telegram api, optionally with parameters added
  */
@@ -36,6 +37,10 @@ function makeReqBody(body){
 
 function sendMessage(msg = {}){
   return requestTelegram('sendMessage', makeReqBody(msg))
+}
+
+function copyMessage(msg = {}){
+  return requestTelegram('copyMessage', makeReqBody(msg))
 }
 
 function forwardMessage(msg){
@@ -116,9 +121,10 @@ async function onMessage (message) {
     }
     let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id,
                                       { type: "json" })
-    return sendMessage({
+    return copyMessage({
       chat_id: guestChantId,
-      text:message.text
+      from_chat_id:message.chat.id,
+      message_id:message.message_id,
     })
   }
   return handleGuestMessage(message)
@@ -157,13 +163,15 @@ async function handleNotify(message){
       text:`检测到骗子，UID${chatId}`
     })
   }
-  let lastMsgTime = await nfd.get('lastmsg-' + chatId, { type: "json" })
-  if(!lastMsgTime || Date.now() - lastMsgTime > NOTIFY_INTERVAL){
-    await nfd.put('lastmsg-' + chatId, Date.now())
-    return sendMessage({
-      chat_id: ADMIN_UID,
-      text:await fetch(notificationUrl).then(r => r.text())
-    })
+  if(enable_notification){
+    let lastMsgTime = await nfd.get('lastmsg-' + chatId, { type: "json" })
+    if(!lastMsgTime || Date.now() - lastMsgTime > NOTIFY_INTERVAL){
+      await nfd.put('lastmsg-' + chatId, Date.now())
+      return sendMessage({
+        chat_id: ADMIN_UID,
+        text:await fetch(notificationUrl).then(r => r.text())
+      })
+    }
   }
 }
 
