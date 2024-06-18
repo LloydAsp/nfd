@@ -43,7 +43,7 @@ No Fraud / Node Forward Bot
 
 
 ## 鸣谢
-- [telegram-bot-cloudflare](https://github.com/cvzi/telegram-bot-cloudflare)
-- [原nfd](https://github.com/LloydAsp/nfd)
-- ChatGPT-4o
-- [视频教程：用Cloud flare 搭建一个TG私信机器人 telegram TG双向限制](https://www.youtube.com/watch?v=DBQqj9UwS1M&t=61s)
+- [telegram-bot-cloudflare](https://github.com/cvzi/telegram-bot-cloudflare “疑似一代源码”)
+- [原nfd](https://github.com/LloydAsp/nfd "基于此源码利用GPT-4o改进")
+- [ChatGPT-4o](https://chatgpt.com/ "辅助改进源码")
+- [视频教程：用Cloud flare 搭建一个TG私信机器人 telegram TG双向限制](https://www.youtube.com/watch?v=DBQqj9UwS1M&t=61s “基于源nfd搭建的视频教程”)
