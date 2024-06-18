@@ -35,5 +35,15 @@ No Fraud / Node Forward Bot
 - 可以通过pr扩展本数据，也可以通过提issue方式补充
 - 提供额外欺诈信息时，需要提供一定的消息出处
 
-## Thanks
+## 以上内容纯属搬运，侵权联系即刻删除。
+
+---
+
+## 自定义教程
+
+
+## 鸣谢
 - [telegram-bot-cloudflare](https://github.com/cvzi/telegram-bot-cloudflare)
+- [原nfd][https://github.com/LloydAsp/nfd
+- ChatGPT-4o
+- [视频教程：用Cloud flare 搭建一个TG私信机器人 telegram TG双向限制]https://www.youtube.com/watch?v=DBQqj9UwS1M&t=61s
