@@ -1,6 +1,34 @@
-{
-  "badWords": ["badword1", "badword2", "广告", "推广"],
-  "badPatterns": ["\\b(asshole|bitch|bastard|biatch|dick|f\\*ck|fag|faggot|feck|cunt|c\\*nt|shit|sh\\*t|piss|twat|操|草|马|妈|爸|SB|傻|逼|叉|吊|屌|Bitch|Nigger|Shit|Fuck|Damn|Hell|Bastard|Arsehole|Motherfucker|Sonofbitch|Cocksucker|Mothafucka|Dickhead|Shithole|Cuntface|Muthafucka|Tits|Titties|Boobs|Breasts|Nipples|Asshole|Assholes|Assface|Asswipe|Asswipes|Dildo|Cock|Cocks|Cockface|Cockhead|Cockroach|Cocksucker|Cocksuckers|Cum|Cumshot|Cunnilingus|Felching|Fellatio|Fingerfuck|Fingerfucked|Fingering|Fisting|Foreskin|Humping|Nipples|Nympho|Orgasm|Penis|Pussy|Rectum|Rimming|Scat|Sex|Shitface|Slut|Smegma|Snatch|Sphincter|Taint|Titwank|Tongue|Tosser|Tushy|Vagina|Wank|Whorefucker)\\b","\\b(?:广告|推广)\\b"],
-  "advertKeywords": ["buy now", "discount", "promotion"],
-  "advertPatterns": ["\\b(?:buy now|discount|promotion)\\b"]
-}
+const veryComprehensiveBadWordRegexList = [
+  // 英文脏话及变体
+  new RegExp("\\b(asshole|a\\*s\\*hole|asswhole)\\b", "gi"),
+  new RegExp("\\b(bitch|biatch|beetch)\\b", "gi"),
+  new RegExp("\\b(bastard|ba\\*stard|basterd)\\b", "gi"),
+  new RegExp("\\b(damn|di***|d***n)\\b", "gi"),
+  new RegExp("\\b(shit|sh*t|s***t)\\b", "gi"),
+  new RegExp("\\b(piss|p*ss)\\b", "gi"),
+  new RegExp("\\b(twat|c*nt)\\b", "gi"),
+  new RegExp("\\b(cock|d*ck)\\b", "gi"),
+  new RegExp("\\b(fuck|f*ck|f**k|fuc*)\\b", "gi"),
+  new RegExp("\\b(crap|cr*p)\\b", "gi"),
+  // 中文脏话及网络用语
+  new RegExp("\\b(操|草|肏|靠|日|干|娘|妈|妈的|TMD|SB|傻|傻逼|白痴|贱|贱人|婊子|荡妇|屌|阴茎|睾丸|鸟|鸟人|烂|狗屎|狗屁|放屁|吃屎|去死|王八|王八蛋)\\b", "gi"),
+  // 英文种族歧视词汇
+  new RegExp("\\b(nigger|negro|n*gger)\\b", "gi"),
+  // 英文性别歧视词汇
+  new RegExp("\\b(slut|whore|b*tch)\\b", "gi"),
+  // 英文同性恋歧视词汇
+  new RegExp("\\b(fag|faggot|dyke)\\b", "gi"),
+  // 侮辱人智力或能力的词汇
+  new RegExp("\\b(retard|idiot|moron|imbecile)\\b", "gi"),
+  // 其他侮辱性词汇
+  new RegExp("\\b(arsehole|motherf*cker|sonofb*tch|cocks*cker)\\b", "gi"),
+  // 性相关侮辱词汇
+  new RegExp("\\b(tit|tits|boob|boobs|nipple|nipples|ass|asshole|assholes|butt|buttocks|anus|c*ntface|d*ldo|v*g*n*|p*ssy)\\b", "gi"),
+  // 性行为相关侮辱词汇
+  new RegExp("\\b(fingerf*ck|f*ck*ng|f*ck*d|f*l*t*t*|bl*wj*b|c*cks*ck*ng|c*m|cumshot)\\b", "gi"),
+  // 其他可能的侮辱或不当词汇
+  new RegExp("\\b(bast*rd|arse|pr*ck|scum|trash|filth|w*nker)\\b", "gi"),
+  // 可能的缩写和替代字符
+  new RegExp("\\b(wtf|f***)\\b", "gi"),
+  // 添加更多可能的脏话或不当表达...
+];
