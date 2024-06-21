@@ -1,7 +1,5 @@
-{
-  "badWord": [
-    "example1",
-    "example2",
-    "example3"
-  ]
-}
+[
+  "badword1",
+  "badword2",
+  "badword3"
+]
