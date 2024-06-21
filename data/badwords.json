@@ -1,5 +1,4 @@
-[
-  "badword1",
-  "badword2",
-  "badword3"
-]
+{
+  "plain": ["badword1", "badword2"],
+  "regex": ["badword\\d+"]
+}
