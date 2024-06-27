@@ -23,9 +23,18 @@ No Fraud / Node Forward Bot
 3. 从[@username_to_id_bot](https://t.me/username_to_id_bot)获取你的用户id
 4. 登录[cloudflare](https://workers.cloudflare.com/)，创建一个worker
 5. 配置worker的变量
-    - 增加一个`ENV_BOT_TOKEN`变量，数值为从步骤1中获得的token
-    - 增加一个`ENV_BOT_SECRET`变量，数值为从步骤2中获得的secret
-    - 增加一个`ENV_ADMIN_UID`变量，数值为从步骤3中获得的用户id
+    - 增加一个`ENV_BOT_TOKEN`变量，数值为
+        - 从步骤1中获得的token
+    - 增加一个`ENV_BOT_SECRET`变量，数值为
+        - 从步骤2中获得的secret
+    - 增加一个`ENV_ADMIN_UID`变量，数值为
+        - 从步骤3中获得的用户id
+    - 增加一个`ENV_AD_WORDS_URL`变量，值为
+        - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/adwords.json
+    - 增加一个`ENV_BAD_WORDS_URL`变量，值为
+        - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/badwords.json
+    - 增加一个`ENV_FRAUD_DB_URL`变量，值为
+        - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/fraud.json
 6. 绑定kv数据库，创建一个Namespace Name为`nfd`的kv数据库，在setting -> variable中设置`KV Namespace Bindings`：nfd -> nfd
 7. 点击`Quick Edit`，复制[这个文件](./worker.js)到编辑器中
 8. 通过打开`https://xxx.workers.dev/registerWebhook`来注册websoket
@@ -40,22 +49,29 @@ No Fraud / Node Forward Bot
 - 可以通过pr扩展本数据，也可以通过提issue方式补充
 - 提供额外欺诈信息时，需要提供一定的消息出处
 
-## 以上内容纯属搬运，侵权联系即刻删除。
+## 以上内容绝大部分搬运自[原项目：nfd](https://github.com/LloydAsp/nfd "基于此源码利用GPT-4o修改")
 
 ---
+
 # 此版本为GPT-4o修改版 增加了过滤广告和脏话关键词的功能（支持正则表达式）
+
+## 自定义教程
+1. ***Fork***本仓库
+2. 将***URL***替换为Fork后仓库的URL
+3. 在Fork后的仓库中修改数据库中的内容
+
 ## 自定义环境变量
-- ENV_AD_WORDS_URL（广告关键词数据库URL 必填） ：
-    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/adwords.json
-- ENV_ADMIN_UID（TG管理员ID 必填） ：
-    - 你的TG ID
-- ENV_BAD_WORDS_URL（脏话关键词数据库URL 必填） ：
-    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/badwords.json
-- ENV_BOT_SECRET（机器人secret 必填） ：
-    - 你的机器人secret
-- ENV_BOT_TOKEN（机器人token 必填） ：
+- ENV_BOT_TOKEN（机器人token **必填**） ：
     - 你的机器人token
-- ENV_FRAUD_DB_URL（欺诈者ID数据库URL 必填） ：
+- ENV_BOT_SECRET（机器人secret **必填**） ：
+    - 你的机器人secret
+- ENV_ADMIN_UID（TG管理员ID **必填**） ：
+    - 你的TG ID
+- ENV_AD_WORDS_URL（广告关键词数据库URL **必填**） ：
+    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/adwords.json
+- ENV_BAD_WORDS_URL（脏话关键词数据库URL **必填**） ：
+    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/badwords.json
+- ENV_FRAUD_DB_URL（欺诈者ID数据库URL **必填**） ：
     - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/fraud.json
 - ENV_NOTIFICATION_URL（通知消息URL） ：
     - https://raw.githubusercontent.com/你的github用户名/nfd/blob/main/data/notification.txt
