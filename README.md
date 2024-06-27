@@ -44,15 +44,21 @@ No Fraud / Node Forward Bot
 # 此版本为GPT-4o修改版 增加了过滤广告和脏话关键词的功能（支持正则表达式）
 ## 自定义环境变量
 - ENV_AD_WORDS_URL（广告关键词数据库URL 必填） ：
-  https://raw.githubusercontent.com/你的github用户名/nfd/main/data/adwords.json
-- ENV_ADMIN_UID（TG管理员ID 必填） ： 你的TG ID
+    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/adwords.json
+- ENV_ADMIN_UID（TG管理员ID 必填） ：
+    - 你的TG ID
 - ENV_BAD_WORDS_URL（脏话关键词数据库URL 必填） ：
-  https://raw.githubusercontent.com/你的github用户名/nfd/main/data/badwords.json
-- ENV_BOT_SECRET（机器人secret 必填） ： 你的机器人secret
-- ENV_BOT_TOKEN（机器人token 必填） ： 你的机器人token
-- ENV_FRAUD_DB_URL（欺诈者ID数据库URL 必填） ： https://raw.githubusercontent.com/你的github用户名/nfd/main/data/fraud.json
-- ENV_NOTIFICATION_URL（通知消息URL） ： https://raw.githubusercontent.com/你的github用户名/nfd/blob/main/data/notification.txt
-- ENV_START_MSG_URL（启动消息URL） ：https://raw.githubusercontent.com/你的github用户名/nfd/main/data/startMessage.md
+    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/badwords.json
+- ENV_BOT_SECRET（机器人secret 必填） ：
+    - 你的机器人secret
+- ENV_BOT_TOKEN（机器人token 必填） ：
+    - 你的机器人token
+- ENV_FRAUD_DB_URL（欺诈者ID数据库URL 必填） ：
+    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/fraud.json
+- ENV_NOTIFICATION_URL（通知消息URL） ：
+    - https://raw.githubusercontent.com/你的github用户名/nfd/blob/main/data/notification.txt
+- ENV_START_MSG_URL（启动消息URL） ：
+    - https://raw.githubusercontent.com/你的github用户名/nfd/main/data/startMessage.md
 - ENV_GITHUB_API_URL（github仓库API 暂无功能 可以不用添加）	
 - ENV_GITHUB_TOKEN（github仓库token 暂无功能 可以不用添加）	
 
