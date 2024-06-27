@@ -12,7 +12,7 @@ No Fraud / Node Forward Bot
 - 接入反欺诈系统，当聊天对象有诈骗历史时，自动发出提醒
 - 支持屏蔽用户，避免被骚扰
 
-## 修改内容
+### 修改内容
 - 支持过滤广告和脏话，触发规则的用户消息不会被转发，且会受到机器人的提示
 - 提高自定义便捷度
 - 待添加：管理员通过直接向机器人发送特定指令和指定脏话/广告关键词或直接用特定指令回复指定关键词，达成机器人自动添加指定关键词进脏话/广告关键词数据库的功能。（本人能力有限，大概是无望了）
@@ -49,7 +49,7 @@ No Fraud / Node Forward Bot
 - 可以通过pr扩展本数据，也可以通过提issue方式补充
 - 提供额外欺诈信息时，需要提供一定的消息出处
 
-## 以上内容绝大部分搬运自[原项目：nfd](https://github.com/LloydAsp/nfd "基于此源码利用GPT-4o修改")
+# 以上内容绝大部分搬运自[原项目：nfd](https://github.com/LloydAsp/nfd "本项目基于此源码利用GPT-4o修改")
 
 ---
 
@@ -82,7 +82,7 @@ No Fraud / Node Forward Bot
 
 ## 鸣谢
 - [telegram-bot-cloudflare](https://github.com/cvzi/telegram-bot-cloudflare "疑似一代源码")
-- [原nfd](https://github.com/LloydAsp/nfd "基于此源码利用GPT-4o修改")
+- [原nfd](https://github.com/LloydAsp/nfd "本项目基于此源码利用GPT-4o修改")
 - [ChatGPT-4o](https://chatgpt.com/ "修改源码主力")
 - [Kimi](https://kimi.moonshot.cn/ "检索资料助手")
-- [视频教程：用Cloud flare 搭建一个TG私信机器人 telegram TG双向限制](https://www.youtube.com/watch?v=DBQqj9UwS1M&t=61s "基于源nfd搭建的视频教程")
+- [视频教程：用Cloud flare 搭建一个TG私信机器人 telegram TG双向限制](https://www.youtube.com/watch?v=DBQqj9UwS1M&t=61s "基于原项目nfd的搭建视频教程")
