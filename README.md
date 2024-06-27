@@ -1,7 +1,7 @@
-# NFD
+# NFD修改版
 No Fraud / Node Forward Bot
 
-一个基于cloudflare worker的telegram 消息转发bot，集成了反欺诈功能
+一个基于cloudflare worker的telegram 消息转发bot，集成了反欺诈功能，增加了脏话与广告关键词过滤功能。
 
 ## 特点
 - 基于cloudflare worker搭建，能够实现以下效果
@@ -11,6 +11,9 @@ No Fraud / Node Forward Bot
     - 稳定，全球cdn转发
 - 接入反欺诈系统，当聊天对象有诈骗历史时，自动发出提醒
 - 支持屏蔽用户，避免被骚扰
+- 支持过滤广告和脏话，触发规则的用户消息不会被转发，且会受到机器人的提示
+- 提高自定义便捷度
+- 待添加：管理员通过直接向机器人发送特定指令和指定脏话/广告关键词或直接用特定指令回复指定关键词，达成机器人自动添加指定关键词进脏话/广告关键词数据库的功能。（本人能力有限，大概是无望了）
 
 ## 搭建方法
 1. 从[@BotFather](https://t.me/BotFather)获取token，并且可以发送`/setjoingroups`来禁止此Bot被添加到群组
