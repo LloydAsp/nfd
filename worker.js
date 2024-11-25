@@ -133,7 +133,7 @@ async function onMessage (message) {
 async function handleGuestMessage(message){
   let chatId = message.chat.id;
   let isblocked = await nfd.get('isblocked-' + chatId, { type: "json" })
-  
+
   if(isblocked){
     return sendMessage({
       chat_id: chatId,
@@ -141,6 +141,7 @@ async function handleGuestMessage(message){
     })
   }
 
+  // 尝试转发消息
   let forwardReq = await forwardMessage({
     chat_id: ADMIN_UID,
     from_chat_id: message.chat.id,
@@ -149,19 +150,25 @@ async function handleGuestMessage(message){
 
   console.log(JSON.stringify(forwardReq))
 
-  if (forwardReq.ok) {
-    await nfd.put('msg-map-' + forwardReq.result.message_id, chatId)
+  // 如果无法转发，则用户可能设置了“没有人”可以查看账号信息
+  if (!forwardReq.ok) {
+    // 检查是否已经发送过用户信息
+    let hasSentInfo = await nfd.get('sent-info-' + chatId, { type: "json" })
+    if (!hasSentInfo) {
+      let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
+      let senderId = message.chat.id;
+
+      // 发送用户信息给管理员
+      await sendMessage({
+        chat_id: ADMIN_UID,
+        text: `用户信息:\n用户名: ${senderUsername}\n用户ID: \`${senderId}\``,
+        parse_mode: 'Markdown'
+      });
+
+      // 标记已发送用户信息
+      await nfd.put('sent-info-' + chatId, true);
+    }
   }
-
-  // 获取私聊者信息，并添加 @ 前缀
-  let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
-  let senderId = message.chat.id;
-
-  // 转发消息，并附带用户信息
-  await sendMessage({
-    chat_id: ADMIN_UID,
-    text: `转发者信息:\n用户名: ${senderUsername}\n用户ID: ${senderId}\n\n原消息内容: ${message.text || '(没有文本内容)'}`,
-  });
 
   return handleNotify(message)
 }
