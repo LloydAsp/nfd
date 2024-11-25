@@ -2,5 +2,6 @@
 
 注意不要乱点指令，联系请说明来意，成功发送消息后不要重复发，并耐心等待回复，被误认为骚扰会被ban
 
-[博客](https://xxxh.de)   [频道](https://t.me/Asukacute)   [开注bot](https://t.me/iikun_bot)   [群组](https://t.me/+I1YBb-lW8k0xOGE0)
+博客：https://xxxh.de
+频道：@Asukacute，开注bot：@iikun_bot，群组：@ikunvv
 
