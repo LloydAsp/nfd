@@ -137,10 +137,11 @@ async function handleGuestMessage(message) {
   if (isblocked) {
     return sendMessage({
       chat_id: chatId,
-      text: 'Your are blocked'
+      text: 'You are blocked'
     });
   }
 
+  // 尝试转发消息给管理员
   let forwardReq = await forwardMessage({
     chat_id: ADMIN_UID,
     from_chat_id: message.chat.id,
@@ -153,9 +154,9 @@ async function handleGuestMessage(message) {
     await nfd.put('msg-map-' + forwardReq.result.message_id, chatId);
   }
 
-  // 检查是否隐藏了转发信息
-  if (!message.forward_from) {
-    // 如果消息转发隐藏了发送者信息，则发送用户信息
+  // 检查转发是否包含用户信息
+  if (!forwardReq.ok || !forwardReq.result) {
+    // 如果无法成功转发消息或没有包含用户信息，则手动发送用户名和用户ID
     let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
     let senderId = message.chat.id;
 
