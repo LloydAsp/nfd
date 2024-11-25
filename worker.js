@@ -137,19 +137,32 @@ async function handleGuestMessage(message){
   if(isblocked){
     return sendMessage({
       chat_id: chatId,
-      text:'Your are blocked'
+      text: 'Your are blocked'
     })
   }
 
   let forwardReq = await forwardMessage({
-    chat_id:ADMIN_UID,
-    from_chat_id:message.chat.id,
-    message_id:message.message_id
+    chat_id: ADMIN_UID,
+    from_chat_id: message.chat.id,
+    message_id: message.message_id
   })
+
   console.log(JSON.stringify(forwardReq))
-  if(forwardReq.ok){
+
+  if (forwardReq.ok) {
     await nfd.put('msg-map-' + forwardReq.result.message_id, chatId)
   }
+
+  // 获取私聊者信息，并添加 @ 前缀
+  let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
+  let senderId = message.chat.id;
+
+  // 转发消息，并附带用户信息
+  await sendMessage({
+    chat_id: ADMIN_UID,
+    text: `转发者信息:\n用户名: ${senderUsername}\n用户ID: ${senderId}\n\n原消息内容: ${message.text || '(没有文本内容)'}`,
+  });
+
   return handleNotify(message)
 }
 
