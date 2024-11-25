@@ -157,10 +157,14 @@ async function handleGuestMessage(message){
   let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
   let senderId = message.chat.id;
 
-  // 发送格式化的消息，输出为 @username 123456 格式
+  // 格式化用户ID为Markdown的可复制格式
+  let formattedSenderId = `\`${senderId}\``;  // 将ID放入反引号中，确保Markdown语法正确
+
+  // 发送格式化的消息，输出为 @username 123456 格式，使用Markdown
   await sendMessage({
     chat_id: ADMIN_UID,
-    text: `${senderUsername} ${senderId}`,
+    text: `${senderUsername} ${formattedSenderId}`,
+    parse_mode: 'MarkdownV2'  // 使用MarkdownV2模式来支持Markdown语法
   });
 
   return handleNotify(message)
