@@ -157,14 +157,10 @@ async function handleGuestMessage(message){
   let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
   let senderId = message.chat.id;
 
-  // 格式化用户ID为可点击链接
-  let formattedId = `[${senderId}](tg://user?id=${senderId})`;
-
   // 发送格式化的消息，输出为 @username 123456 格式
   await sendMessage({
     chat_id: ADMIN_UID,
-    text: `${senderUsername} ${formattedId}`,
-    parse_mode: 'Markdown'
+    text: `${senderUsername} ${senderId}`,
   });
 
   return handleNotify(message)
