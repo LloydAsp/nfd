@@ -130,45 +130,44 @@ async function onMessage (message) {
   return handleGuestMessage(message)
 }
 
-async function handleGuestMessage(message) {
+async function handleGuestMessage(message){
   let chatId = message.chat.id;
-  let isblocked = await nfd.get('isblocked-' + chatId, { type: "json" });
+  let isblocked = await nfd.get('isblocked-' + chatId, { type: "json" })
   
-  if (isblocked) {
+  if(isblocked){
     return sendMessage({
       chat_id: chatId,
-      text: 'You are blocked'
-    });
+      text: 'Your are blocked'
+    })
   }
 
-  // 尝试转发消息给管理员
   let forwardReq = await forwardMessage({
     chat_id: ADMIN_UID,
     from_chat_id: message.chat.id,
     message_id: message.message_id
-  });
+  })
 
-  console.log(JSON.stringify(forwardReq));
+  console.log(JSON.stringify(forwardReq))
 
   if (forwardReq.ok) {
-    await nfd.put('msg-map-' + forwardReq.result.message_id, chatId);
+    await nfd.put('msg-map-' + forwardReq.result.message_id, chatId)
   }
 
-  // 检查转发是否包含用户信息
-  if (!forwardReq.ok || !forwardReq.result) {
-    // 如果无法成功转发消息或没有包含用户信息，则手动发送用户名和用户ID
-    let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
-    let senderId = message.chat.id;
+  // 获取私聊者的用户名（如果有）和用户ID
+  let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
+  let senderId = message.chat.id;
 
-    // 转发消息，并附带用户信息
-    await sendMessage({
-      chat_id: ADMIN_UID,
-      text: `转发者信息:\n用户名: ${senderUsername}\n用户ID: \`${senderId}\``, // 使用反引号包裹ID以符合Markdown语法
-      parse_mode: 'Markdown'  // 使消息支持Markdown格式
-    });
-  }
+  // 格式化用户ID为可点击链接
+  let formattedId = `[${senderId}](tg://user?id=${senderId})`;
 
-  return handleNotify(message);
+  // 发送格式化的消息，输出为 @username 123456 格式
+  await sendMessage({
+    chat_id: ADMIN_UID,
+    text: `${senderUsername} ${formattedId}`,
+    parse_mode: 'Markdown'
+  });
+
+  return handleNotify(message)
 }
 
 async function handleNotify(message){
