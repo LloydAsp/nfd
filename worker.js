@@ -95,6 +95,7 @@ async function onUpdate (update) {
  * Handle incoming Message
  * https://core.telegram.org/bots/api#message
  */
+
 async function onMessage (message) {
   if(message.text === '/start'){
     let startMsg = await fetch(startMsgUrl).then(r => r.text())
@@ -103,11 +104,12 @@ async function onMessage (message) {
       text:startMsg,
     })
   }
+
   if(message.chat.id.toString() === ADMIN_UID){
     if(!message?.reply_to_message?.chat){
       return sendMessage({
         chat_id:ADMIN_UID,
-        text:'使用方法，回复转发的消息，并发送回复消息，或者`/block`、`/unblock`、`/checkblock`等指令'
+        text:'使用方法，回复转发的消息，并发送回复消息，或者`/block`、`/unblock`、`/checkblock`、`/info`等指令'
       })
     }
     if(/^\/block$/.exec(message.text)){
@@ -119,12 +121,19 @@ async function onMessage (message) {
     if(/^\/checkblock$/.exec(message.text)){
       return checkBlock(message)
     }
-    let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id,
-                                      { type: "json" })
+    if(/^\/info$/.exec(message.text)){
+      // 处理 /info 命令
+      let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id, { type: "json" })
+      return sendMessage({
+        chat_id: ADMIN_UID,
+        text: `tg://user?id=${guestChantId}`
+      })
+    }
+    let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id, { type: "json" })
     return copyMessage({
       chat_id: guestChantId,
-      from_chat_id:message.chat.id,
-      message_id:message.message_id,
+      from_chat_id: message.chat.id,
+      message_id: message.message_id,
     })
   }
   return handleGuestMessage(message)
@@ -133,40 +142,23 @@ async function onMessage (message) {
 async function handleGuestMessage(message){
   let chatId = message.chat.id;
   let isblocked = await nfd.get('isblocked-' + chatId, { type: "json" })
-  
+  
   if(isblocked){
     return sendMessage({
       chat_id: chatId,
-      text: 'Your are blocked'
+      text:'Your are blocked'
     })
   }
 
   let forwardReq = await forwardMessage({
-    chat_id: ADMIN_UID,
-    from_chat_id: message.chat.id,
-    message_id: message.message_id
+    chat_id:ADMIN_UID,
+    from_chat_id:message.chat.id,
+    message_id:message.message_id
   })
-
   console.log(JSON.stringify(forwardReq))
-
-  if (forwardReq.ok) {
+  if(forwardReq.ok){
     await nfd.put('msg-map-' + forwardReq.result.message_id, chatId)
   }
-
-  // 获取私聊者的用户名（如果有）和用户ID
-  let senderUsername = message.chat.username ? `@${message.chat.username}` : "无用户名";
-  let senderId = message.chat.id;
-
-  // 格式化用户ID为Markdown的可复制格式
-  let formattedSenderId = `\`${senderId}\``;  // 将ID放入反引号中，确保Markdown语法正确
-
-  // 发送格式化的消息，输出为 @username 123456 格式，使用Markdown
-  await sendMessage({
-    chat_id: ADMIN_UID,
-    text: `${senderUsername} ${formattedSenderId}`,
-    parse_mode: 'MarkdownV2'  // 使用MarkdownV2模式来支持Markdown语法
-  });
-
   return handleNotify(message)
 }
 
