@@ -4,8 +4,10 @@
 
 博客：https://xxxh.de 
 发卡网站：https://shop.xxxh.de
-频道：@Asukacute 丨群组：@ikunvv
-影视服bot：@ikun_emby_bot 丨音乐服bot：@iikun_bot
+频道：@Asukacute
+群组：@ikunvv
+影视服bot：@ikun_emby_bot
+音乐服bot：@iikun_bot
 
 
 
