@@ -3,7 +3,7 @@
 注意不要乱点指令，联系请说明来意，成功发送消息后不要重复发，并耐心等待回复，被误认为骚扰会被ban
 
 博客：https://xxxh.de 
-唯一指定发卡网站：https://shop.xxxh.de，谨防上当受骗！
+发卡网站：https://shop.xxxh.de
 频道：@Asukacute丨群组：@ikunvv
 影视服bot：@ikun_emby_bot丨音乐服bot：@iikun_bot
 
