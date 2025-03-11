@@ -5,8 +5,8 @@ const ADMIN_UID = ENV_ADMIN_UID // your user id, get it from https://t.me/userna
 
 const NOTIFY_INTERVAL = 3600 * 1000;
 const fraudDb = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/fraud.db';
-const notificationUrl = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/notification.txt'
-const startMsgUrl = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/startMessage.md';
+const notificationUrl = 'https://github.com/solaireh3/nfd/raw/refs/heads/main/data/notification.txt'
+const startMsgUrl = 'https://github.com/solaireh3/nfd/raw/refs/heads/main/data/startMessage.md';
 
 const enable_notification = true
 /**
@@ -95,6 +95,7 @@ async function onUpdate (update) {
  * Handle incoming Message
  * https://core.telegram.org/bots/api#message
  */
+
 async function onMessage (message) {
   if(message.text === '/start'){
     let startMsg = await fetch(startMsgUrl).then(r => r.text())
@@ -103,11 +104,12 @@ async function onMessage (message) {
       text:startMsg,
     })
   }
+
   if(message.chat.id.toString() === ADMIN_UID){
     if(!message?.reply_to_message?.chat){
       return sendMessage({
         chat_id:ADMIN_UID,
-        text:'使用方法，回复转发的消息，并发送回复消息，或者`/block`、`/unblock`、`/checkblock`等指令'
+        text:'使用方法，回复转发的消息，并发送回复消息，或者`/block`、`/unblock`、`/checkblock`、`/info`等指令'
       })
     }
     if(/^\/block$/.exec(message.text)){
@@ -119,12 +121,19 @@ async function onMessage (message) {
     if(/^\/checkblock$/.exec(message.text)){
       return checkBlock(message)
     }
-    let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id,
-                                      { type: "json" })
+    if(/^\/info$/.exec(message.text)){
+      // 处理 /info 命令
+      let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id, { type: "json" })
+      return sendMessage({
+        chat_id: ADMIN_UID,
+        text: `tg://user?id=${guestChantId}`
+      })
+    }
+    let guestChantId = await nfd.get('msg-map-' + message?.reply_to_message.message_id, { type: "json" })
     return copyMessage({
       chat_id: guestChantId,
-      from_chat_id:message.chat.id,
-      message_id:message.message_id,
+      from_chat_id: message.chat.id,
+      message_id: message.message_id,
     })
   }
   return handleGuestMessage(message)
@@ -133,7 +142,7 @@ async function onMessage (message) {
 async function handleGuestMessage(message){
   let chatId = message.chat.id;
   let isblocked = await nfd.get('isblocked-' + chatId, { type: "json" })
-  
+  
   if(isblocked){
     return sendMessage({
       chat_id: chatId,
