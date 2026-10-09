@@ -7,6 +7,10 @@ const NOTIFY_INTERVAL = 3600 * 1000;
 const fraudDb = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/fraud.db';
 const notificationUrl = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/notification.txt'
 const startMsgUrl = 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/startMessage.md';
+const badWordsUrl = ENV_BAD_WORDS_URL || 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/badwords.json';
+const adWordsUrl = ENV_AD_WORDS_URL || 'https://raw.githubusercontent.com/LloydAsp/nfd/main/data/adwords.json';
+const githubApiUrl = ENV_GITHUB_API_URL
+const githubToken = ENV_GITHUB_TOKEN
 
 const enable_notification = true
 /**
@@ -86,6 +90,10 @@ async function handleWebhook (event) {
  * https://core.telegram.org/bots/api#update
  */
 async function onUpdate (update) {
+  if (!badWords || !adWords) {
+    await loadKeywords()
+  }
+
   if ('message' in update) {
     await onMessage(update.message)
   }
@@ -103,7 +111,31 @@ async function onMessage (message) {
       text:startMsg,
     })
   }
+
+  const checkResult = containsBadWordsOrAds(message.text)
+  if (checkResult === 'badWord') {
+    await sendMessage({
+      chat_id: message.chat.id,
+      text: '消息包含不允许的脏话，请注意言辞。'
+    })
+    return
+  } else if (checkResult === 'adWord') {
+    await sendMessage({
+      chat_id: message.chat.id,
+      text: '消息包含不允许的广告内容，请勿发送广告。'
+    })
+    return
+  }
+
   if(message.chat.id.toString() === ADMIN_UID){
+    if(/^\/addbadword\s+(.+)$/.exec(message.text)){
+      const keyword = message.text.match(/^\/addbadword\s+(.+)$/)[1]
+      return await addBadWord(keyword, message.chat.id)
+    }
+    if(/^\/addadword\s+(.+)$/.exec(message.text)){
+      const keyword = message.text.match(/^\/addadword\s+(.+)$/)[1]
+      return await addAdWord(keyword, message.chat.id)
+    }
     if(!message?.reply_to_message?.chat){
       return sendMessage({
         chat_id:ADMIN_UID,
@@ -254,4 +286,149 @@ async function isFraud(id){
   let flag = arr.filter(v => v === id).length !== 0
   console.log(flag)
   return flag
+}
+
+let badWords = null
+let adWords = null
+
+/**
+ * Load bad words and ad words from the data files
+ */
+async function loadKeywords () {
+  try {
+    const [badRes, adRes] = await Promise.all([fetch(badWordsUrl), fetch(adWordsUrl)])
+    if (!badRes.ok || !adRes.ok) {
+      throw new Error(`fetch keywords failed: ${badRes.statusText} / ${adRes.statusText}`)
+    }
+    const badData = await badRes.json()
+    const adData = await adRes.json()
+
+    badWords = {
+      plain: badData.plain || [],
+      regex: (badData.regex || []).map(pattern => new RegExp(pattern, 'i'))
+    }
+    adWords = {
+      plain: adData.plain || [],
+      regex: (adData.regex || []).map(pattern => new RegExp(pattern, 'i'))
+    }
+
+    console.log('keywords loaded')
+  } catch (error) {
+    console.error('failed to load keywords:', error)
+  }
+}
+
+/**
+ * Check whether text contains bad words or ads
+ * returns 'badWord' | 'adWord' | null
+ */
+function containsBadWordsOrAds (text) {
+  if (!text) {
+    return null
+  }
+  if (!badWords || !adWords) {
+    console.error('keywords not loaded')
+    return null
+  }
+  for (const word of badWords.plain) {
+    if (text.includes(word)) {
+      return 'badWord'
+    }
+  }
+  for (const word of adWords.plain) {
+    if (text.includes(word)) {
+      return 'adWord'
+    }
+  }
+  for (const regex of badWords.regex) {
+    if (regex.test(text)) {
+      return 'badWord'
+    }
+  }
+  for (const regex of adWords.regex) {
+    if (regex.test(text)) {
+      return 'adWord'
+    }
+  }
+  return null
+}
+
+/**
+ * Add a bad word and sync keywords to GitHub
+ */
+async function addBadWord (keyword, chatId) {
+  try {
+    if (!badWords || !adWords) {
+      throw new Error('关键词列表尚未加载，请稍后重试')
+    }
+    badWords.plain.push(keyword)
+    await updateGitHubKeywords()
+    return sendMessage({
+      chat_id: chatId,
+      text: `成功添加脏话关键词: ${keyword}`
+    })
+  } catch (error) {
+    console.error('failed to add bad word:', error)
+    return sendMessage({
+      chat_id: chatId,
+      text: `添加脏话关键词时出错: ${error.message}`
+    })
+  }
+}
+
+/**
+ * Add an ad word and sync keywords to GitHub
+ */
+async function addAdWord (keyword, chatId) {
+  try {
+    if (!badWords || !adWords) {
+      throw new Error('关键词列表尚未加载，请稍后重试')
+    }
+    adWords.plain.push(keyword)
+    await updateGitHubKeywords()
+    return sendMessage({
+      chat_id: chatId,
+      text: `成功添加广告关键词: ${keyword}`
+    })
+  } catch (error) {
+    console.error('failed to add ad word:', error)
+    return sendMessage({
+      chat_id: chatId,
+      text: `添加广告关键词时出错: ${error.message}`
+    })
+  }
+}
+
+/**
+ * Sync keywords to GitHub via the contents API
+ * requires ENV_GITHUB_API_URL and ENV_GITHUB_TOKEN
+ */
+async function updateGitHubKeywords () {
+  if (!githubApiUrl || !githubToken) {
+    throw new Error('未配置 ENV_GITHUB_API_URL / ENV_GITHUB_TOKEN，关键词仅保存在当前实例')
+  }
+  const updatedKeywords = {
+    badWords: {
+      plain: badWords.plain,
+      regex: badWords.regex.map(regex => regex.source)
+    },
+    adWords: {
+      plain: adWords.plain,
+      regex: adWords.regex.map(regex => regex.source)
+    }
+  }
+
+  const response = await fetch(githubApiUrl, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${githubToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updatedKeywords)
+  })
+
+  if (!response.ok) {
+    throw new Error(`更新GitHub关键词数据库失败: ${response.statusText}`)
+  }
+  console.log('GitHub关键词数据库更新成功')
 }
